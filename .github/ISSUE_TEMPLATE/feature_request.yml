@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an idea for procmon-mcp (Windows Python MCP server)
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share your idea for improving **procmon-mcp**. The more detail you give, the easier it is to evaluate.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem description
+      description: What problem would this solve, or what is missing today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How you imagine this working (behavior, MCP tools, docs, etc.).
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you thought about. Optional.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: References, related issues, or constraints. Optional.
+    validations:
+      required: false

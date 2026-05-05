@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.0xhackerfren/procmon-mcp",
+  "description": "Windows process monitoring, ETW tracing, event logs, services, drivers, and PE analysis via MCP",
+  "title": "ProcMon MCP",
+  "websiteUrl": "https://github.com/0xhackerfren/ProcMon-MCP",
+  "repository": {
+    "url": "https://github.com/0xhackerfren/ProcMon-MCP",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "procmon-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

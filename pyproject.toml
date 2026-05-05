@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "procmon-mcp"
+version = "0.1.0"
+description = "MCP server for Windows process monitoring, ETW tracing, and PE analysis"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "0x_hackerfren", email = "0xhackerfren@gmail.com"},
+]
+maintainers = [
+    {name = "0x_hackerfren", email = "0xhackerfren@gmail.com"},
+]
+keywords = ["mcp", "windows", "process-monitor", "etw", "pe-analysis", "security"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "pefile>=2023.2.7",
+]
+
+[project.optional-dependencies]
+psutil = ["psutil>=5.9.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.4.0",
+    "build>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/0xhackerfren/ProcMon-MCP"
+Repository = "https://github.com/0xhackerfren/ProcMon-MCP"
+"Bug Tracker" = "https://github.com/0xhackerfren/ProcMon-MCP/issues"
+Changelog = "https://github.com/0xhackerfren/ProcMon-MCP/blob/main/CHANGELOG.md"
+
+[project.scripts]
+procmon-mcp = "procmon_mcp.server:main"
+
+[tool.setuptools.packages.find]
+include = ["procmon_mcp*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
