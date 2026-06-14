@@ -100,6 +100,32 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
+### Streamable HTTP Transport
+
+By default, the server uses standard input/output (stdio) for communication. You can also run the server as a Streamable HTTP service:
+
+```bash
+procmon-mcp --transport http --host 127.0.0.1 --port 8000
+```
+
+To configure your client (e.g., Claude Desktop or Cursor) to connect to this server, use the `streamable-http` connection type:
+
+```json
+{
+  "mcpServers": {
+    "procmon-mcp-http": {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:8000/mcp"
+    }
+  }
+}
+```
+
+#### CLI Arguments
+- `--transport`: Choose between `stdio` and `http` (default: `stdio`)
+- `--host`: Host to bind the Streamable HTTP server to (default: `127.0.0.1`)
+- `--port`: Port to bind the Streamable HTTP server to (default: `8000`)
+
 ## Tool reference
 
 | Tool | Description | Required parameters |

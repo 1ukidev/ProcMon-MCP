@@ -58,3 +58,23 @@ async def test_call_tool_unknown():
     result = await call_tool("nonexistent_tool", {})
     data = json.loads(result[0].text)
     assert data["error"] == "unknown_tool"
+
+
+def test_main_stdio_argument():
+    from unittest.mock import AsyncMock, patch
+    with patch("procmon_mcp.server.main_async", new_callable=AsyncMock) as mock_async, \
+         patch("procmon_mcp.server.main_http", new_callable=AsyncMock) as mock_http:
+        from procmon_mcp.server import main
+        main(["--transport", "stdio"])
+        mock_async.assert_called_once()
+        mock_http.assert_not_called()
+
+
+def test_main_http_argument():
+    from unittest.mock import AsyncMock, patch
+    with patch("procmon_mcp.server.main_async", new_callable=AsyncMock) as mock_async, \
+         patch("procmon_mcp.server.main_http", new_callable=AsyncMock) as mock_http:
+        from procmon_mcp.server import main
+        main(["--transport", "http", "--host", "127.0.0.1", "--port", "9000"])
+        mock_async.assert_not_called()
+        mock_http.assert_called_once_with("127.0.0.1", 9000)

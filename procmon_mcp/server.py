@@ -433,12 +433,70 @@ if HAS_MCP:
                 app.create_initialization_options(),
             )
 
-    def main() -> None:
-        asyncio.run(main_async())
+    async def main_http(host: str, port: int) -> None:
+        import sys
+        try:
+            import contextlib
+
+            import uvicorn
+            from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
+            from starlette.applications import Starlette
+        except ImportError:
+            print("Error: starlette, uvicorn and anyio are required for streamable HTTP transport.", file=sys.stderr)
+            print("Please install them or use stdio transport.", file=sys.stderr)
+            sys.exit(1)
+
+        session_manager = StreamableHTTPSessionManager(app)
+
+        @contextlib.asynccontextmanager
+        async def lifespan(starlette_app: Starlette):
+            async with session_manager.run():
+                yield
+
+        starlette_router = Starlette(lifespan=lifespan)
+
+        async def starlette_app(scope, receive, send):
+            if scope["type"] == "http" and scope["path"] in ("/mcp", "/mcp/"):
+                await session_manager.handle_request(scope, receive, send)
+            else:
+                await starlette_router(scope, receive, send)
+
+        print(f"Starting Streamable HTTP server on http://{host}:{port}/mcp", file=sys.stderr)
+
+        config = uvicorn.Config(starlette_app, host=host, port=port)
+        server = uvicorn.Server(config)
+        await server.serve()
+
+    def main(argv: list[str] | None = None) -> None:
+        import argparse
+        parser = argparse.ArgumentParser(description="ProcMon MCP Server")
+        parser.add_argument(
+            "--transport",
+            choices=["stdio", "http"],
+            default="stdio",
+            help="Transport type to run the MCP server on (stdio or http)",
+        )
+        parser.add_argument(
+            "--host",
+            default="127.0.0.1",
+            help="Host to bind the Streamable HTTP server to (default: 127.0.0.1)",
+        )
+        parser.add_argument(
+            "--port",
+            type=int,
+            default=8000,
+            help="Port to bind the Streamable HTTP server to (default: 8000)",
+        )
+        args = parser.parse_args(argv)
+
+        if args.transport == "http":
+            asyncio.run(main_http(args.host, args.port))
+        else:
+            asyncio.run(main_async())
 
 else:
 
-    def main() -> None:
+    def main(argv: list[str] | None = None) -> None:
         print("MCP SDK not installed. Install with: pip install mcp")
         print("Running diagnostic snapshot instead...")
         print(json.dumps(mod_system.check_elevation(), indent=2))
